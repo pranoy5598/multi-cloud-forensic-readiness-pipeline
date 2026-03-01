@@ -15,6 +15,8 @@ This project implements a fully serverless, multi-cloud security architecture de
 - Microsoft Sentinel SIEM integration
 - Automated incident creation via Microsoft Defender
 
+![Architecture Diagram](architecture.png)
+
 ---
 
 ## 🏗️ Architecture
