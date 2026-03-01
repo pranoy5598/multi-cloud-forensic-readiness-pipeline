@@ -1,0 +1,3 @@
+AWSCustomLogs_CL
+| where userIdentity_type_s == "Root"
+| where additionalEventData_MFAUsed_s == "No"

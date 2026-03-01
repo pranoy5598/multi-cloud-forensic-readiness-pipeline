@@ -1,0 +1,140 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "When_a_blob_is_added_or_modified_(properties_only)_(V2)": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/triggers/batch/onupdatedfile",
+                    "queries": {
+                        "folderId": "JTJmdHJhaWxiYWNrdXA=",
+                        "maxFileCount": 10,
+                        "checkBothCreatedAndModifiedDateTime": false
+                    }
+                },
+                "recurrence": {
+                    "interval": 3,
+                    "frequency": "Minute"
+                },
+                "splitOn": "@triggerBody()",
+                "metadata": {
+                    "JTJmdHJhaWxiYWNrdXA=": "/trailbackup"
+                }
+            }
+        },
+        "actions": {
+            "Get_blob_content_using_path_(V2)": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/GetFileContentByPath",
+                    "queries": {
+                        "path": "@{triggerOutputs()?['body']['Path']}",
+                        "inferContentType": true,
+                        "queryParametersSingleEncoded": true
+                    }
+                },
+                "runAfter": {}
+            },
+            "Parse_JSON": {
+                "type": "ParseJson",
+                "inputs": {
+                    "content": "@base64ToString(body('Get_blob_content_using_path_(V2)')?['$content'])",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "Records": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Get_blob_content_using_path_(V2)": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "For_each": {
+                "type": "Foreach",
+                "foreach": "@body('Parse_JSON')?['Records']",
+                "actions": {
+                    "GenerateSignature": {
+                        "type": "Http",
+                        "inputs": {
+                            "uri": "https://sentinel-header-gen-bxeudzc2aqc4gdgb.northeurope-01.azurewebsites.net/api/GenerateSentinelSignature?code=wqwcoagNGB73TSpP0CvTDzpN5Zesam4-UPdhvK6g0_V2AzFuhdewbg==",
+                            "method": "POST",
+                            "headers": {
+                                "Content-Type": "application/json"
+                            },
+                            "body": {
+                                "workspaceId": "4d3cb2a1-96be-4052-aabb-718aa5ce829b",
+                                "sharedKey": "khd/5p4xoXXDe9Xn4ddQ7B1vGgQFDeOUXUeCeQZ3a3IaIFtRu0LBBW+Wni6d7/qKnKeZMM5uITP30WsZeU7fNA==",
+                                "content": "@{string(item())}"
+                            }
+                        }
+                    },
+                    "HTTP_1": {
+                        "type": "Http",
+                        "inputs": {
+                            "uri": "https://4d3cb2a1-96be-4052-aabb-718aa5ce829b.ods.opinsights.azure.com/api/logs?api-version=2016-04-01",
+                            "method": "POST",
+                            "headers": {
+                                "Content-Type": "application/json",
+                                "Log-Type": "AWSCustomLogs",
+                                "Authorization": "@{body('GenerateSignature')['Authorization']}",
+                                "x-ms-date": "@{body('GenerateSignature')['x-ms-date']}",
+                                "Content-Length": "@{length(string(item()))}"
+                            },
+                            "body": "@{string(item())}"
+                        },
+                        "runAfter": {
+                            "GenerateSignature": [
+                                "Succeeded"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Parse_JSON": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "type": "Object",
+                "defaultValue": {}
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "type": "Object",
+            "value": {
+                "azureblob": {
+                    "id": "/subscriptions/79d9339e-dc16-48cb-8532-381b116da210/providers/Microsoft.Web/locations/northeurope/managedApis/azureblob",
+                    "connectionId": "/subscriptions/79d9339e-dc16-48cb-8532-381b116da210/resourceGroups/log-backup-rg/providers/Microsoft.Web/connections/azureblob-2",
+                    "connectionName": "azureblob-2"
+                }
+            }
+        }
+    }
+}
