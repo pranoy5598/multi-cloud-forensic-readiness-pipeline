@@ -1,6 +1,5 @@
-# multi-cloud-forensic-readiness-pipeline
+**# multi-cloud-forensic-readiness-pipeline**
 Serverless multi-cloud forensic readiness framework using AWS CloudTrail, Azure Blob Storage, Microsoft Sentinel, and Defender.
-# 🔐 Multi-Cloud Forensic Readiness Framework
 
 
 ---
