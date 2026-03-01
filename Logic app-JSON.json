@@ -77,14 +77,14 @@
                     "GenerateSignature": {
                         "type": "Http",
                         "inputs": {
-                            "uri": "https://sentinel-header-gen-bxeudzc2aqc4gdgb.northeurope-01.azurewebsites.net/api/GenerateSentinelSignature?code=wqwcoagNGB73TSpP0CvTDzpN5Zesam4-UPdhvK6g0_V2AzFuhdewbg==",
+                            "uri": "https://sentinel-header-gen-bxeudzc2aqc4gdgb.northeurope-01.azurewebsites.net/api/GenerateSentinelSignature?code=wqwcoagFuhdewbg==",
                             "method": "POST",
                             "headers": {
                                 "Content-Type": "application/json"
                             },
                             "body": {
-                                "workspaceId": "4d3cb2a1-96be-4052-aabb-718aa5ce829b",
-                                "sharedKey": "khd/5p4xoXXDe9Xn4ddQ7B1vGgQFDeOUXUeCeQZ3a3IaIFtRu0LBBW+Wni6d7/qKnKeZMM5uITP30WsZeU7fNA==",
+                                "workspaceId": "4d3cb218aa5ce829b",
+                                "sharedKey": "khd/5p4xoXXDe9Xn4ddQ7B1vGgKeZMM5uITP30WsZeU7fNA==",
                                 "content": "@{string(item())}"
                             }
                         }
@@ -92,7 +92,7 @@
                     "HTTP_1": {
                         "type": "Http",
                         "inputs": {
-                            "uri": "https://4d3cb2a1-96be-4052-aabb-718aa5ce829b.ods.opinsights.azure.com/api/logs?api-version=2016-04-01",
+                            "uri": "https://4d3cb2a1-2-aab829b.ods.opinsights.azure.com/api/logs?api-version=2016-04-01",
                             "method": "POST",
                             "headers": {
                                 "Content-Type": "application/json",
@@ -130,11 +130,12 @@
             "type": "Object",
             "value": {
                 "azureblob": {
-                    "id": "/subscriptions/79d9339e-dc16-48cb-8532-381b116da210/providers/Microsoft.Web/locations/northeurope/managedApis/azureblob",
-                    "connectionId": "/subscriptions/79d9339e-dc16-48cb-8532-381b116da210/resourceGroups/log-backup-rg/providers/Microsoft.Web/connections/azureblob-2",
+                    "id": "/subscriptions/79d9339e-dc16-4210/providers/Microsoft.Web/locations/northeurope/managedApis/azureblob",
+                    "connectionId": "/subscriptions/79d9339116da210/resourceGroups/log-backup-rg/providers/Microsoft.Web/connections/azureblob-2",
                     "connectionName": "azureblob-2"
                 }
             }
         }
     }
+
 }
