@@ -27,6 +27,8 @@ AWS CloudTrail → Amazon S3 → AWS Lambda (Upload + Hash)
 
 ---
 
+![Workflow Diagram](workflow.png)
+
 ## 🔐 Security Features
 
 ### Cross-Cloud Redundancy
